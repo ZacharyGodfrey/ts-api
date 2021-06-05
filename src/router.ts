@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Database } from './database';
+import * as routes from './routes';
 
 export const createRouter = (db: Database) => {
   const router = Router();
@@ -10,6 +11,8 @@ export const createRouter = (db: Database) => {
       serverTime: new Date().toISOString(),
     });
   });
+
+  routes.register(db, router);
 
   return router;
 };
