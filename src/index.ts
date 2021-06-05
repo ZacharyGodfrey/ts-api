@@ -1,22 +1,19 @@
-import nodemon from 'nodemon';
-import { createConnection } from './database';
+import { connectToDatabase } from './database';
+import { configureEnvironment } from './environment';
 import { createRouter } from './router';
 import { createServer } from './server';
 
-const db = createConnection();
-const router = createRouter(db);
-const server = createServer(router);
-const environment = (process.env.NODE_ENV || 'local').toLowerCase();
-const port = Number(process.env.PORT) || 8080;
+configureEnvironment();
 
-console.log(`Starting server in ${environment} environment...`);
+connectToDatabase().then(db => {
+  const router = createRouter(db);
+  const server = createServer(router);
+  const env = process.env.NODE_ENV;
+  const port = process.env.PORT;
 
-if (environment === 'local') {
-  process.on('SIGINT', () => {
-    console.log('Detected [ctrl + c]...');
-    nodemon.emit('exit');
-    process.exit();
+  console.log(`[START] Starting server in ${env} environment...`);
+
+  server.listen(port, () => {
+    console.log(`[START] Listening on port ${port}...`);
   });
-}
-
-server.listen(port, () => console.log(`Listening on port ${port}...`));
+});
