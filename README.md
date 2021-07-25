@@ -2,27 +2,66 @@
 
 **A NodeJS API written in TypeScript**
 
-The problem domain for this project is an online store because that's more interesting than a to-do list application.
+The problem domain for this project is an online product catalog because that's more interesting than a to-do list application.
 
 ## Domain Entities
 
 The API is divided into the following entities that make up the domain model:
 
-- `User`: A user on the website
-- `Store`: A company offering products for sale
+- `User`: An administrator account on the website
+- `Session`: An authenticated session for the user
 - `Category`: A collection of products
 - `Product`: An item for sale in the store
 - `Feature`: A customizable detail about a product (size, color, etc.)
-- `Option`: A value for a feature (small, medium, large, etc.)
-- `Order`: A purchase of a product
+- `Option`: A value for a feature (small, large, red, blue, etc.)
 
 ## Entity Properties
 
-Each entity has _at least_ the following properties:
+Every entity has the following properties in addition to its unique properties:
 
-- `id`: The unique identifier of the entity, a UUIDv4 string
-- `created`: A UTC timestamp of when the entity was created
-- `updated`: A UTC timestamp of when the entity was last updated
+|Name|Type|Description|
+|`id`|string|The unique identifier of the entity, a UUIDv4 string|
+|`created`|string|A UTC timestamp of when the entity was created|
+|`updated`|string|A UTC timestamp of when the entity was last updated|
+
+### User
+
+|Name|Type|Description|
+|`username`|string|The unique name for a user (3-25 characters)|
+|`password_hash`|string|An SHA256 HMAC of the user's `id` and chosen password|
+
+### Session
+
+|Name|Type|
+|`user_id`|string|
+
+### Category
+
+|Name|Type|
+|`name`|string|
+|`description`|string|
+
+### Product
+
+|Name|Type|
+|`category_id`|string|
+|`name`|string|
+|`description`|string|
+|`price`|integer|
+
+### Feature
+
+|Name|Type|
+|`product_id`|string|
+|`name`|string|
+|`description`|string|
+
+### Option
+
+|Name|Type|
+|`feature_id`|string|
+|`name`|string|
+|`price`|integer|
 
 ## HTTP Request Processing
 
@@ -40,45 +79,21 @@ Each request is broken down into the following processing steps:
 The API will only return the following HTTP status codes:
 
 - `200`: The action was successful
-- `400`: The user provided invalid input data
-- `401`: The user does not have an authenticated session
-- `403`: The authenticated user has insufficient permissions
-- `404`: The endpoint does not exist
+- `400`: The request is invalid
+- `404`: The requested endpoint does not exist
 - `500`: An unexpected error occurred
 
-## HTTP Requests
+## API Endpoints
 
 Each entity has the following actions available:
 
-### Create
-
-`POST /:entity`
-
-Creates a new entity and returns the created entity
-
-### Search
-
-`GET /:entity`
-
-Returns an array of entities matching the specified search criteria
-
-### View
-
-`GET /:entity/:id`
-
-Returns the entity with the specified `id`
-
-### Update
-
-`PUT /:entity/:id`
-
-Updates the entity with the specified `id` and returns the updated entity
-
-### Remove
-
-`DELETE /:entity/:id`
-
-Deletes the entity with the specified `id` and returns an empty response
+|Action|Method|Endpoint|Description|
+|---|---|---|---|
+|**Create**|POST|`/:entity`|Creates a new entity and returns the created entity|
+|**Search**|GET|`/:entity`|Returns an array of entities matching the specified search criteria|
+|**View**|GET|`/:entity/:id`|Returns the entity with the specified `id`|
+|**Update**|PUT|`/:entity/:id`|Updates the entity with the specified `id` and returns the updated entity|
+|**Remove**|DELETE|`/:entity/:id`|Deletes the entity with the specified `id` and returns an empty response|
 
 ## Local Development
 
