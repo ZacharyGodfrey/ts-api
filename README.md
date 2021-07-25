@@ -20,6 +20,7 @@ The API is divided into the following entities that make up the domain model:
 Every entity has the following properties in addition to its unique properties:
 
 |Name|Type|Description|
+|---|---|---|
 |`id`|string|The unique identifier of the entity, a UUIDv4 string|
 |`created`|string|A UTC timestamp of when the entity was created|
 |`updated`|string|A UTC timestamp of when the entity was last updated|
@@ -27,23 +28,27 @@ Every entity has the following properties in addition to its unique properties:
 ### User
 
 |Name|Type|Description|
+|---|---|---|
 |`username`|string|The unique name for a user (3-25 characters)|
 |`password_hash`|string|An SHA256 HMAC of the user's `id` and chosen password|
 
 ### Session
 
 |Name|Type|
+|---|---|
 |`user_id`|string|
 
 ### Category
 
 |Name|Type|
+|---|---|
 |`name`|string|
 |`description`|string|
 
 ### Product
 
 |Name|Type|
+|---|---|
 |`category_id`|string|
 |`name`|string|
 |`description`|string|
@@ -52,6 +57,7 @@ Every entity has the following properties in addition to its unique properties:
 ### Feature
 
 |Name|Type|
+|---|---|
 |`product_id`|string|
 |`name`|string|
 |`description`|string|
@@ -59,6 +65,7 @@ Every entity has the following properties in addition to its unique properties:
 ### Option
 
 |Name|Type|
+|---|---|
 |`feature_id`|string|
 |`name`|string|
 |`price`|integer|
