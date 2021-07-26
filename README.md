@@ -8,16 +8,18 @@ The problem domain for this project is an online product catalog because that's 
 
 The API is divided into the following entities that make up the domain model:
 
-- `User`: An administrator account on the website
-- `Session`: An authenticated session for the user
-- `Category`: A collection of products
-- `Product`: An item for sale in the store
-- `Feature`: A customizable detail about a product (size, color, etc.)
-- `Option`: A value for a feature (small, large, red, blue, etc.)
+|Entity|Description|
+|---|---|
+|`User`|An administrator account on the website|
+|`Session`|An authenticated session for the user|
+|`Category`|A collection of products|
+|`Product`|An item for sale in the store|
+|`Feature`|A customizable detail about a product (size, color, etc.)|
+|`Option`|A value for a feature (small, large, red, blue, etc.)|
 
 ## Entity Properties
 
-Every entity has the following properties in addition to its unique properties:
+Each entity has the following properties in addition to its unique properties:
 
 |Name|Type|Description|
 |---|---|---|
