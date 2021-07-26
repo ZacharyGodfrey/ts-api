@@ -76,21 +76,25 @@ Each entity has the following properties in addition to its unique properties:
 
 Each request is broken down into the following processing steps:
 
-- `Log Request`: Log the details of the HTTP request
-- `Authentication`: Determine who the user is
-- `Authorization`: Determine whether the user has the necessary permissions
-- `Validation`: Determine whether the given input data meets all the requirements
-- `Execution`: Perform the action
-- `Log Response`: Log the details of the HTTP response
+|Step|Description|
+|---|---|
+|`Log Request`|Log the details of the HTTP request|
+|`Authentication`|Determine who the user is|
+|`Authorization`|Determine whether the user has the necessary permissions|
+|`Validation`|Determine whether the given input data meets all the requirements|
+|`Execution`|Perform the action|
+|`Log Response`|Log the details of the HTTP response|
 
 ## HTTP Response Status Codes
 
 The API will only return the following HTTP status codes:
 
-- `200`: The action was successful
-- `400`: The request is invalid
-- `404`: The requested endpoint does not exist
-- `500`: An unexpected error occurred
+|Status|Description|
+|---|---|
+|`200`|The action was successful|
+|`400`|The request is invalid|
+|`404`|The requested endpoint does not exist|
+|`500`|An unexpected error occurred|
 
 ## API Endpoints
 
