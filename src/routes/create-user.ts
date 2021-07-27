@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 
-import { crypto } from '../utilities';
+import { hmac } from '../utilities';
 import { Endpoint } from '../types';
 
 export const createUser: Endpoint = {
@@ -50,7 +50,7 @@ export const createUser: Endpoint = {
       created: req.timestamp,
       updated: req.timestamp,
       username: req.body.username,
-      password_hash: crypto.hmac(id, req.body.password),
+      password_hash: hmac(id, req.body.password),
     });
 
     // TODO: Uncomment after testing

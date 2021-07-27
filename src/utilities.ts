@@ -1,7 +1,5 @@
-import * as Crypto from 'crypto';
+import { createHmac } from 'crypto';
 
-export const crypto = {
-  hmac: (secret: string, value: string) => {
-    return Crypto.createHmac('sha256', secret).update(value).digest('hex');
-  },
+export const hmac = (secret: string, value: string) => {
+  return createHmac('sha256', secret).update(value).digest('hex');
 };
