@@ -43,10 +43,9 @@ The API will only return the following HTTP status codes:
 
 ## Local Development
 
-Create a new, empty PostgreSQL database. Then create a `.env` file at the root of the project with the following variables:
+Create a new, empty Postgres database. Then create a `.env` file at the root of the project with the following variables:
 
 ```
-COOKIE_SECRET=your-cookie-signing-secret
 DATABASE_URL=your-postgres-connection-string
 ```
 

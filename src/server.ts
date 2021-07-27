@@ -1,5 +1,4 @@
 import * as uuid from 'uuid';
-import cookieParser from 'cookie-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import { URLSearchParams } from 'url';
 
@@ -11,7 +10,6 @@ export const createServer = (db: Database, endpoints: Endpoint[]) => {
   server.set('json spaces', 2);
   server.use(express.urlencoded({ extended: false }));
   server.use(express.json());
-  server.use(cookieParser(process.env.COOKIE_SECRET));
   server.use(cors);
 
   endpoints.forEach(endpoint => {
@@ -72,7 +70,7 @@ const createHandler = (db: Database, endpoint: Endpoint) => {
         response = await endpoint.execute(request, db);
       }
     } catch (error) {
-      logError(request, error);
+      logError(error);
 
       response = {
         status: 500,
@@ -98,7 +96,6 @@ const translateRequest = (req: Request) => {
     path: req.path,
     urlParams: req.params,
     queryParams: new URLSearchParams(queryString),
-    cookies: req.signedCookies,
     body: req.body,
   };
 
@@ -115,16 +112,13 @@ const logRequest = (request: AppRequest) => {
   console.info(JSON.stringify(event, null, 2));
 };
 
-const logError = (request: AppRequest, error: Error) => {
+const logError = (error: Error) => {
   const event: AppEvent = {
     type: 'Server Error Occurred',
     time: new Date().toISOString(),
     data: {
-      error: {
-        message: error.message,
-        stack: error.stack?.split('\n'),
-      },
-      request,
+      message: error.message,
+      stack: error.stack?.split('\n'),
     },
   };
 

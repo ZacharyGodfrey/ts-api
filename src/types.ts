@@ -14,7 +14,6 @@ export interface AppRequest {
   path: string;
   urlParams: Record<string, string>;
   queryParams: URLSearchParams;
-  cookies: Record<string, string>;
   body: any;
 }
 
