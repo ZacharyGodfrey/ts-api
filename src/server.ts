@@ -94,7 +94,6 @@ const translateRequest = (req: Request) => {
   const request: AppRequest = {
     requestId: uuid.v4(),
     timestamp: new Date().toISOString(),
-    user: null, // TODO: Add user lookup
     method: req.method,
     path: req.path,
     urlParams: req.params,

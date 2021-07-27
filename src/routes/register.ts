@@ -3,9 +3,9 @@ import * as uuid from 'uuid';
 import { hmac } from '../utilities';
 import { Endpoint } from '../types';
 
-export const createUser: Endpoint = {
+export const register: Endpoint = {
   method: 'POST',
-  path: '/create-user',
+  path: '/register',
   validate: async (req, db) => {
     const errors: string[] = [];
     const username = req.body.username || '';
@@ -53,8 +53,7 @@ export const createUser: Endpoint = {
       password_hash: hmac(id, req.body.password),
     });
 
-    // TODO: Uncomment after testing
-    // delete user.password_hash;
+    delete user.password_hash;
 
     return {
       status: 200,

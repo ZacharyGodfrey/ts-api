@@ -2,8 +2,9 @@
   "scripts": {
     "format": "prettier src/**/*.ts --write",
     "build": "rm -rf build && tsc",
-    "start": "node build/index.js",
-    "local": "nodemon --watch src --ext ts --exec ts-node src/index.ts"
+    "start": "node build/scripts/start.js",
+    "local": "nodemon --watch src --ext ts --exec ts-node src/scripts/start.ts",
+    "schema": "ts-node src/scripts/schema.ts"
   },
   "prettier": {
     "semi": true,

@@ -15,7 +15,7 @@ export const connectToDatabase = (): Database => {
       const keys = Object.keys(params).join(', ');
       const values = Object.values(params);
       const indices = values.map((_, i) => `$${i + 1}`).join(', ');
-      const sql = `INSERT INTO ${tableName} (${keys}) VALUES (${indices}) RETURNING *`;
+      const sql = `INSERT INTO public.${tableName} (${keys}) VALUES (${indices}) RETURNING *`;
       const { rows } = await pool.query(sql, values);
 
       return rows;

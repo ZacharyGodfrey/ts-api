@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS public.user (
 
 CREATE TABLE IF NOT EXISTS public.session (
   id UUID NOT NULL,
+  created TIMESTAMPTZ NOT NULL,
+  updated TIMESTAMPTZ NOT NULL,
   user_id UUID NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_session_user FOREIGN KEY (user_id) REFERENCES public.user (id)

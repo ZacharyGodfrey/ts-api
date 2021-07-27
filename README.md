@@ -2,6 +2,8 @@
 
 **A NodeJS API written in TypeScript**
 
+This project is an HTTP API, but not necessarily a REST API. The architecture could easily be converted to use REST endpoints, but I wanted to experiment with free-form endpoints in this project.
+
 The problem domain for this project is an online product catalog because that's more interesting than a to-do list application.
 
 ## HTTP Request Methods
@@ -12,13 +14,12 @@ The API will only accept `GET` and `POST` requests.
 
 Each request is broken down into the following processing steps:
 
-| Step           | Description                            |
-| -------------- | -------------------------------------- |
-| `Log Request`  | Log the details of the HTTP request    |
-| `Authenticate` | Determine which user sent the request  |
-| `Validate`     | Determine whether the request is valid |
-| `Execute`      | Perform the requested action           |
-| `Log Response` | Log the details of the HTTP response   |
+| Step           | Description                                                                        |
+| -------------- | ---------------------------------------------------------------------------------- |
+| `Log Request`  | Log the details of the HTTP request                                                |
+| `Validate`     | Determine whether the request is valid (includes authentication and authorization) |
+| `Execute`      | Perform the requested action                                                       |
+| `Log Response` | Log the details of the HTTP response                                               |
 
 ## HTTP Response Status Codes
 
@@ -33,10 +34,11 @@ The API will only return the following HTTP status codes:
 
 ## API Endpoints
 
-| Method | Path           | Description                              |
-| ------ | -------------- | ---------------------------------------- |
-| GET    | `/`            | Returns information about the API itself |
-| POST   | `/create-user` | Creates a new user account               |
+| Method | Path            | Description                              |
+| ------ | --------------- | ---------------------------------------- |
+| GET    | `/`             | Returns information about the API itself |
+| POST   | `/register`     | Creates a new user account               |
+| POST   | `/authenticate` | Creates a new session for a user         |
 
 ## Local Development
 

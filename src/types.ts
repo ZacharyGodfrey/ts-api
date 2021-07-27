@@ -10,7 +10,6 @@ export interface AppEvent {
 export interface AppRequest {
   requestId: string;
   timestamp: string;
-  user: any;
   method: string;
   path: string;
   urlParams: Record<string, string>;
