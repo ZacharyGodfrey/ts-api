@@ -34,33 +34,28 @@ The API will only return the following HTTP status codes:
 
 ## API Endpoints
 
-| Method | Path            | Description                              |
-| ------ | --------------- | ---------------------------------------- |
-| GET    | `/`             | Returns information about the API itself |
-| POST   | `/register`     | Creates a new user account               |
-| POST   | `/authenticate` | Creates a new session for a user         |
+| Method | Path        | Description                              |
+| ------ | ----------- | ---------------------------------------- |
+| GET    | `/`         | Returns information about the API itself |
+| POST   | `/register` | Creates a new user account               |
+| POST   | `/log-in`   | Creates a new session for a user         |
+| POST   | `/log-out`  | Deletes a session for a user             |
 
 ## Local Development
 
 ### Create the Database
 
-- Create a new, empty PostgreSQL database
-- Execute the scripts in `src/schema` in their numbered order
-
-### Specify Environment Variables
-
-Create a `.env` file at the root of the project with the following variables:
+Create a new, empty PostgreSQL database. Then create a `.env` file at the root of the project with the following variables:
 
 ```
 COOKIE_SECRET=your-cookie-signing-secret
 DATABASE_URL=your-postgres-connection-string
 ```
 
-### Run the Application
-
-- `npm i` to install dependencies
-- `npm run local` to run the API in watch mode
-- `http://localhost:8080`
+1. `npm i` to install dependencies
+2. `npm run schema` to create the database tables
+3. `npm run local` to run the API in watch mode
+4. `http://localhost:8080`
 
 ## Domain Entities
 
