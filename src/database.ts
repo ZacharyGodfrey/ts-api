@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { Database } from '../types';
+import { Database } from './types';
 
 export const connectToDatabase = (): Database => {
   const pool = new Pool({

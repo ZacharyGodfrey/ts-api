@@ -1,25 +1,37 @@
-import { NextFunction, Request, Response } from 'express';
 import { QueryResult } from 'pg';
+import { URLSearchParams } from 'url';
 
-export type Handler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Promise<void>;
-
-export interface Endpoint {
-  authentication: Handler;
-  authorization: Handler;
-  validation: Handler;
-  execution: Handler;
+export interface AppEvent {
+  type: string;
+  time: string;
+  data: any;
 }
 
-export interface Entity {
-  create: Endpoint;
-  search: Endpoint;
-  view: Endpoint;
-  update: Endpoint;
-  remove: Endpoint;
+export interface AppRequest {
+  requestId: string;
+  timestamp: string;
+  user: any;
+  method: string;
+  path: string;
+  urlParams: Record<string, string>;
+  queryParams: URLSearchParams;
+  cookies: Record<string, string>;
+  body: any;
+}
+
+export interface AppResponse {
+  status: 200 | 400 | 404 | 500;
+  body: {
+    data: any;
+    messages: string[];
+  };
+}
+
+export interface Endpoint {
+  method: 'GET' | 'POST';
+  path: string;
+  validate: (request: AppRequest, db: Database) => Promise<string[]>;
+  execute: (request: AppRequest, db: Database) => Promise<AppResponse>;
 }
 
 export interface Database {
