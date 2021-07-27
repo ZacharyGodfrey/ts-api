@@ -43,8 +43,6 @@ The API will only return the following HTTP status codes:
 
 ## Local Development
 
-### Create the Database
-
 Create a new, empty PostgreSQL database. Then create a `.env` file at the root of the project with the following variables:
 
 ```
