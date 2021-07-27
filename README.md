@@ -33,8 +33,6 @@ The API will only return the following HTTP status codes:
 
 ## API Endpoints
 
-Each entity has the following actions available:
-
 | Method | Path           | Description                              |
 | ------ | -------------- | ---------------------------------------- |
 | GET    | `/`            | Returns information about the API itself |
@@ -59,7 +57,7 @@ DATABASE_URL=your-postgres-connection-string
 ### Run the Application
 
 - `npm i` to install dependencies
-- `npm run local` to run the app in watch mode
+- `npm run local` to run the API in watch mode
 - `http://localhost:8080`
 
 ## Domain Entities
