@@ -1,9 +1,9 @@
-import * as uuid from 'uuid';
 import express, { Request } from 'express';
 
 import { AppEvent, AppRequest, AppResponse, Database } from './types';
 
 import { actions } from './actions';
+import { uuid } from './utilities';
 
 export const createServer = (db: Database) => {
   const server = express();
@@ -67,7 +67,7 @@ export const createServer = (db: Database) => {
 
 const translateRequest = (req: Request) => {
   const request: AppRequest = {
-    id: uuid.v4(),
+    id: uuid(),
     time: new Date().toISOString(),
     token: req.body.token,
     action: req.body.action,
