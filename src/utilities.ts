@@ -1,8 +1,11 @@
+import * as UUID from 'uuid';
 import { createHmac } from 'crypto';
 
 export const hmac = (secret: string, value: string) => {
   return createHmac('sha256', secret).update(value).digest('hex');
 };
+
+export const uuid = () => UUID.v4();
 
 export const processSequentially = <T>(
   items: T[],

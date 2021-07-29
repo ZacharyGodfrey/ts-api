@@ -1,15 +1,13 @@
-import * as uuid from 'uuid';
+import { Action } from '../types';
+import { hmac, uuid } from '../utilities';
 
-import { hmac } from '../utilities';
-import { Endpoint } from '../types';
-
-export const register: Endpoint = {
-  method: 'POST',
-  path: '/register',
-  validate: async (req, db) => {
+export const register: Action = {
+  name: 'Register',
+  authenticate: false,
+  validate: async (request, db) => {
     const errors: string[] = [];
-    const username = req.body.username || '';
-    const password = req.body.password || '';
+    const username = request.data.username || '';
+    const password = request.data.password || '';
     const existingUsers = await db.query(
       `SELECT * FROM public.user WHERE username = $1`,
       [username],
@@ -43,14 +41,14 @@ export const register: Endpoint = {
 
     return errors;
   },
-  execute: async (req, db) => {
-    const id = uuid.v4();
+  execute: async (request, db) => {
+    const id = uuid();
     const [user] = await db.insert('user', {
       id,
-      created: req.timestamp,
-      updated: req.timestamp,
-      username: req.body.username,
-      password_hash: hmac(id, req.body.password),
+      created: request.time,
+      updated: request.time,
+      username: request.data.username,
+      password_hash: hmac(id, request.data.password),
     });
 
     delete user.password_hash;

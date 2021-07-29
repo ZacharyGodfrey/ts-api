@@ -1,5 +1,4 @@
 import { QueryResult } from 'pg';
-import { URLSearchParams } from 'url';
 
 export interface AppEvent {
   type: string;
@@ -8,13 +7,12 @@ export interface AppEvent {
 }
 
 export interface AppRequest {
-  requestId: string;
-  timestamp: string;
-  method: string;
-  path: string;
-  urlParams: Record<string, string>;
-  queryParams: URLSearchParams;
-  body: any;
+  id: string;
+  time: string;
+  token: string;
+  action: string;
+  data: any;
+  user?: any;
 }
 
 export interface AppResponse {
@@ -25,9 +23,9 @@ export interface AppResponse {
   };
 }
 
-export interface Endpoint {
-  method: 'GET' | 'POST';
-  path: string;
+export interface Action {
+  name: string;
+  authenticate: boolean;
   validate: (request: AppRequest, db: Database) => Promise<string[]>;
   execute: (request: AppRequest, db: Database) => Promise<AppResponse>;
 }

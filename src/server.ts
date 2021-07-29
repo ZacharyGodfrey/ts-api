@@ -1,105 +1,138 @@
 import * as uuid from 'uuid';
-import express, { NextFunction, Request, Response } from 'express';
-import { URLSearchParams } from 'url';
+import express, { Request } from 'express';
 
-import { Endpoint, AppRequest, AppResponse, Database, AppEvent } from './types';
+import { AppEvent, AppRequest, AppResponse, Database } from './types';
 
-export const createServer = (db: Database, endpoints: Endpoint[]) => {
+import { actions } from './actions';
+
+export const createServer = (db: Database) => {
   const server = express();
 
   server.set('json spaces', 2);
   server.use(express.urlencoded({ extended: false }));
   server.use(express.json());
-  server.use(cors);
 
-  endpoints.forEach(endpoint => {
-    const handler = createHandler(db, endpoint);
+  // CORS
+  server.use((req, res, next) => {
+    // Allow CORS
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Methods', 'POST');
 
-    switch (endpoint.method) {
-      case 'GET':
-        server.get(endpoint.path, handler);
-        break;
+    // Remove headers that leak information
+    res.removeHeader('x-powered-by');
 
-      case 'POST':
-        server.post(endpoint.path, handler);
-        break;
+    // Handle OPTIONS requests
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+    } else {
+      next();
     }
   });
 
-  server.use(notFound);
-
-  return server;
-};
-
-const cors = (req: Request, res: Response, next: NextFunction) => {
-  // Allow CORS
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST');
-
-  // Remove headers that leak information
-  res.removeHeader('x-powered-by');
-
-  // Handle OPTIONS requests
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-  } else {
-    next();
-  }
-};
-
-const createHandler = (db: Database, endpoint: Endpoint) => {
-  return async (req: Request, res: Response) => {
+  // Handler
+  server.post('/', async (req, res) => {
     const request = translateRequest(req);
-    let response: AppResponse;
 
     logRequest(request);
 
-    try {
-      const errors = await endpoint.validate(request, db);
-
-      if (errors && errors.length > 0) {
-        response = {
-          status: 400,
-          body: {
-            data: null,
-            messages: errors,
-          },
-        };
-      } else {
-        response = await endpoint.execute(request, db);
-      }
-    } catch (error) {
-      logError(error);
-
-      response = {
-        status: 500,
-        body: {
-          data: null,
-          messages: ['An unexpected error has occurred.'],
-        },
-      };
-    }
+    const response = await processRequest(request, db);
 
     res.status(response.status).json(response.body);
 
     logResponse(response);
-  };
+  });
+
+  // 404 Not Found
+  server.use((req, res) => {
+    const request = translateRequest(req);
+
+    logRequest(request);
+
+    const response: AppResponse = {
+      status: 404,
+      body: {
+        data: null,
+        messages: ['The requested endpoint does not exist.'],
+      },
+    };
+
+    res.status(response.status).json(response.body);
+
+    logResponse(response);
+  });
+
+  return server;
 };
 
 const translateRequest = (req: Request) => {
-  const queryString = req.originalUrl.split('?')[1] || '';
   const request: AppRequest = {
-    requestId: uuid.v4(),
-    timestamp: new Date().toISOString(),
-    method: req.method,
-    path: req.path,
-    urlParams: req.params,
-    queryParams: new URLSearchParams(queryString),
-    body: req.body,
+    id: uuid.v4(),
+    time: new Date().toISOString(),
+    token: req.body.token,
+    action: req.body.action,
+    data: req.body.data,
+    user: null,
   };
 
   return request;
+};
+
+const processRequest = async (
+  request: AppRequest,
+  db: Database,
+): Promise<AppResponse> => {
+  try {
+    const action = actions[request.action];
+
+    if (!action) {
+      return {
+        status: 400,
+        body: {
+          data: null,
+          messages: ['The specified action does not exist.'],
+        },
+      };
+    }
+
+    if (action.authenticate) {
+      // TODO: Perform DB lookup
+
+      if (!request.user) {
+        return {
+          status: 400,
+          body: {
+            data: null,
+            messages: ['You must be logged in to perform this action.'],
+          },
+        };
+      }
+    }
+
+    const errors = await action.validate(request, db);
+
+    if (errors && errors.length > 0) {
+      return {
+        status: 400,
+        body: {
+          data: null,
+          messages: errors,
+        },
+      };
+    } else {
+      return action.execute(request, db);
+    }
+  } catch (error) {
+    logError(error);
+
+    return {
+      status: 500,
+      body: {
+        data: null,
+        messages: ['An unexpected error has occurred.'],
+      },
+    };
+  }
 };
 
 const logRequest = (request: AppRequest) => {
@@ -133,22 +166,4 @@ const logResponse = (response: AppResponse) => {
   };
 
   console.info(JSON.stringify(event, null, 2));
-};
-
-const notFound = (req: Request, res: Response) => {
-  const request = translateRequest(req);
-
-  logRequest(request);
-
-  const response: AppResponse = {
-    status: 404,
-    body: {
-      data: null,
-      messages: ['The requested endpoint does not exist.'],
-    },
-  };
-
-  res.status(response.status).json(response.body);
-
-  logResponse(response);
 };
