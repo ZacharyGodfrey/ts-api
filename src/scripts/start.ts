@@ -2,12 +2,11 @@ import dotenv from 'dotenv';
 
 import { connectToDatabase } from '../database';
 import { createServer } from '../server';
-import { routes } from '../routes';
 
 dotenv.config();
 
 const db = connectToDatabase();
-const server = createServer(db, routes);
+const server = createServer(db);
 const env = process.env.NODE_ENV || 'local';
 const port = process.env.PORT || '8080';
 

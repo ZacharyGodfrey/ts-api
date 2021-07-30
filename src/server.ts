@@ -12,7 +12,7 @@ export const createServer = (db: Database) => {
   server.use(express.urlencoded({ extended: false }));
   server.use(express.json());
 
-  // CORS
+  // Middleware
   server.use((req, res, next) => {
     // Allow CORS
     res.header('Access-Control-Allow-Origin', '*');
@@ -43,17 +43,13 @@ export const createServer = (db: Database) => {
     logResponse(response);
   });
 
-  // 404 Not Found
+  // Catch-all
   server.use((req, res) => {
-    const request = translateRequest(req);
+    const response = Response.notFound();
 
-    logRequest(request);
-
-    const response = Response.serverError();
+    console.info(`${response.status} - ${req.method} - ${req.originalUrl}`);
 
     res.status(response.status).json(response.body);
-
-    logResponse(response);
   });
 
   return server;
@@ -63,19 +59,15 @@ const translateRequest = (req: Request) => {
   const request: AppRequest = {
     id: uuid(),
     time: new Date().toISOString(),
-    token: req.body.token,
-    action: req.body.action,
+    token: `${req.body.token || ''}`,
+    action: `${req.body.action || ''}`,
     data: req.body.data,
-    user: null,
   };
 
   return request;
 };
 
-const processRequest = async (
-  request: AppRequest,
-  db: Database,
-): Promise<AppResponse> => {
+const processRequest = async (request: AppRequest, db: Database) => {
   try {
     const action = actions[request.action];
 
@@ -84,7 +76,7 @@ const processRequest = async (
     }
 
     if (action.authenticate) {
-      // TODO: Perform DB lookup
+      request.user = await getUserByToken(request.token, db);
 
       if (!request.user) {
         return Response.badRequest([
@@ -105,6 +97,19 @@ const processRequest = async (
 
     return Response.serverError();
   }
+};
+
+const getUserByToken = async (token: string, db: Database) => {
+  const query = `
+    SELECT u.*
+    FROM public.user AS u
+    LEFT JOIN public.session AS s ON s.user_id = u.id
+    WHERE s.id = $1
+  `;
+
+  const response = await db.query(query, [token]);
+
+  return response.rows[0];
 };
 
 const logRequest = (request: AppRequest) => {
