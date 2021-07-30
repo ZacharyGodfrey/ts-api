@@ -29,10 +29,10 @@ Example:
 
 ### Action List
 
-- `List Actions`
 - `Register`
 - `Log In`
 - `Log Out`
+- `List Users`
 
 ## HTTP Responses
 
