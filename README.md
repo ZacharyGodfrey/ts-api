@@ -19,7 +19,7 @@ Example:
 ```json
 {
   "token": "",
-  "action": "Log In",
+  "action": "Sign In",
   "data": {
     "username": "example",
     "password": "1Example!"
@@ -29,9 +29,9 @@ Example:
 
 ### Action List
 
-- `Register`
-- `Log In`
-- `Log Out`
+- `Sign Up`
+- `Sign In`
+- `Sign Out`
 - `List Users`
 
 ## HTTP Responses

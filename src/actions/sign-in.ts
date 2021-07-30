@@ -1,8 +1,8 @@
 import { Action, Database } from '../types';
 import { hmac, Response, uuid } from '../utilities';
 
-export const logIn: Action = {
-  name: 'Log In',
+export const signIn: Action = {
+  name: 'Sign In',
   authenticate: false,
   validate: async (request, db) => {
     const errors: string[] = [];

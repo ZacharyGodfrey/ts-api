@@ -1,11 +1,11 @@
 import { listUsers } from './list-users';
-import { logIn } from './log-in';
-import { logOut } from './log-out';
-import { register } from './register';
+import { signIn } from './sign-in';
+import { signOut } from './sign-out';
+import { signUp } from './sign-up';
 
 export const actions = {
-  [register.name]: register,
-  [logIn.name]: logIn,
-  [logOut.name]: logOut,
+  [signUp.name]: signUp,
+  [signIn.name]: signIn,
+  [signOut.name]: signOut,
   [listUsers.name]: listUsers,
 };

@@ -1,8 +1,8 @@
 import { Action } from '../types';
 import { hmac, Response, uuid } from '../utilities';
 
-export const register: Action = {
-  name: 'Register',
+export const signUp: Action = {
+  name: 'Sign Up',
   authenticate: false,
   validate: async (request, db) => {
     const errors: string[] = [];

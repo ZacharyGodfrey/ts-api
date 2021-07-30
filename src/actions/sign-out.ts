@@ -1,8 +1,8 @@
 import { Action } from '../types';
 import { Response } from '../utilities';
 
-export const logOut: Action = {
-  name: 'Log Out',
+export const signOut: Action = {
+  name: 'Sign Out',
   authenticate: false,
   validate: async (request, db) => {
     const errors: string[] = [];
