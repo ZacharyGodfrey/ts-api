@@ -3,7 +3,7 @@ import express, { Request } from 'express';
 import { AppEvent, AppRequest, AppResponse, Database } from './types';
 
 import { actions } from './actions';
-import { uuid } from './utilities';
+import { Response, uuid } from './utilities';
 
 export const createServer = (db: Database) => {
   const server = express();
@@ -49,13 +49,7 @@ export const createServer = (db: Database) => {
 
     logRequest(request);
 
-    const response: AppResponse = {
-      status: 404,
-      body: {
-        data: null,
-        messages: ['The requested endpoint does not exist.'],
-      },
-    };
+    const response = Response.serverError();
 
     res.status(response.status).json(response.body);
 
@@ -86,52 +80,30 @@ const processRequest = async (
     const action = actions[request.action];
 
     if (!action) {
-      return {
-        status: 400,
-        body: {
-          data: null,
-          messages: ['The specified action does not exist.'],
-        },
-      };
+      return Response.badRequest(['The specified action does not exist.']);
     }
 
     if (action.authenticate) {
       // TODO: Perform DB lookup
 
       if (!request.user) {
-        return {
-          status: 400,
-          body: {
-            data: null,
-            messages: ['You must be logged in to perform this action.'],
-          },
-        };
+        return Response.badRequest([
+          'You must be logged in to perform this action.',
+        ]);
       }
     }
 
     const errors = await action.validate(request, db);
 
     if (errors && errors.length > 0) {
-      return {
-        status: 400,
-        body: {
-          data: null,
-          messages: errors,
-        },
-      };
+      return Response.badRequest(errors);
     } else {
       return action.execute(request, db);
     }
   } catch (error) {
     logError(error);
 
-    return {
-      status: 500,
-      body: {
-        data: null,
-        messages: ['An unexpected error has occurred.'],
-      },
-    };
+    return Response.serverError();
   }
 };
 

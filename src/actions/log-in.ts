@@ -1,5 +1,5 @@
 import { Action, Database } from '../types';
-import { hmac, uuid } from '../utilities';
+import { hmac, Response, uuid } from '../utilities';
 
 export const logIn: Action = {
   name: 'Log In',
@@ -38,15 +38,9 @@ export const logIn: Action = {
       user_id: user.id,
     });
 
-    return {
-      status: 200,
-      body: {
-        data: {
-          sessionId: session.id,
-        },
-        messages: [],
-      },
-    };
+    return Response.success({
+      token: session.id,
+    });
   },
 };
 

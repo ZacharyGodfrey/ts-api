@@ -1,5 +1,5 @@
 import { Action } from '../types';
-import { hmac, uuid } from '../utilities';
+import { hmac, Response, uuid } from '../utilities';
 
 export const register: Action = {
   name: 'Register',
@@ -51,14 +51,9 @@ export const register: Action = {
       password_hash: hmac(id, request.data.password),
     });
 
+    // Don't leak information
     delete user.password_hash;
 
-    return {
-      status: 200,
-      body: {
-        data: user,
-        messages: [],
-      },
-    };
+    return Response.success(user);
   },
 };

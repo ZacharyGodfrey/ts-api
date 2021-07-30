@@ -1,4 +1,5 @@
 import { Action } from '../types';
+import { Response } from '../utilities';
 
 export const logOut: Action = {
   name: 'Log Out',
@@ -18,12 +19,6 @@ export const logOut: Action = {
 
     await db.query(query, [request.token]);
 
-    return {
-      status: 200,
-      body: {
-        data: null,
-        messages: [],
-      },
-    };
+    return Response.success();
   },
 };
